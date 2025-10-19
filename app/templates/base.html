@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <title>Portfolio | {% block title %}{% endblock %}</title>
+</head>
+<body>
+    <nav>
+        <a href="{{ url_for('main.index') }}">Home</a> |
+        <a href="{{ url_for('main.about') }}">About Me</a> |
+
+        {% if current_user.is_authenticated %}
+            Welcome, **{{ current_user.full_name }}**! |
+            <a href="{{ url_for('main.admin_add_project') }}">Add Project</a> |
+            <a href="{{ url_for('main.logout') }}">Logout</a>
+
+        {% else %}
+            <a href="{{ url_for('main.login') }}">Login</a> |
+            <a href="{{ url_for('main.register') }}">Register</a>
+        {% endif %}
+    </nav>
+    <hr>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul class="flashes">
+                {% for category, message in messages %}
+                    <li class="{{ category }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+    <div class="content">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+</body>
+</html>

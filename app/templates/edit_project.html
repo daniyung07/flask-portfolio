@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Project{% endblock %}
+
+{% block content %}
+    <h1>Edit Project: {{ form.title.data }}</h1>
+
+    <form method="POST" action="{{ url_for('main.admin_edit_project', id=form.id.data) }}"> 
+        
+        {{ form.hidden_tag() }} 
+
+        <div>
+            {{ form.title.label }}
+            {{ form.title(class="form-control") }}
+            {% for error in form.title.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </div>
+        <div>
+            {{ form.description.label }}
+            {{ form.description(class="form-control") }}
+            {% for error in form.description.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </div>
+        <div>
+            {{ form.link.label }}
+            {{ form.link(class="form-control") }}
+            {% for error in form.link.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </div>
+        
+        <br>
+        {{ form.submit(class="btn btn-primary") }}
+    </form>
+{% endblock %}
