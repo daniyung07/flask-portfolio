@@ -1,0 +1,16 @@
+# Virtual Environment
+venv/
+.venv/
+.env
+
+# Database Files
+*.db
+*.sqlite
+instance/
+
+# Python Files
+__pycache__/
+*.pyc
+
+# IDE Files
+.idea/
