@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 # We need or_ for the database search logic
 from sqlalchemy import or_
+from unicodedata import category
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, logout_user, login_required, current_user
 
@@ -113,27 +114,30 @@ def logout():
 
 
 # --- ADMIN (CRUD) ROUTES ---
-
 @main.route('/admin/add_project', methods=['GET', 'POST'])
 @login_required
 def admin_add_project():
     form = ProjectForm()
 
     if form.validate_on_submit():
-        # Data is valid, create and commit the new project
+        # 1. Object Creation
         new_project = Portfolio(title=form.title.data,
                                 description=form.description.data,
                                 link=form.link.data)
         try:
+            # 2. Database Commit
             db.session.add(new_project)
-            db.session.commit()
+            db.session.commit()  # <--- CRITICAL STEP
+
             flash(f"Project '{form.title.data}' added successfully!", 'success')
             return redirect(url_for('main.index'))
-        except:
+        except Exception as e:
+            # 3. Error Handling
             db.session.rollback()
-            flash('Error adding project to database.', 'error')
+            print(f"Database Error: {e}")  # Check the terminal for this output!
+            flash('Error adding project. Check server logs.', 'error')
 
-    return render_template('add_project.html', title='Add Project', form=form)
+    return render_template('index.html', title='Add Project', form=form)
 
 
 @main.route('/admin/edit_project/<int:id>', methods=['GET', 'POST'])
